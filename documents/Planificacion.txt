@@ -1,12 +1,15 @@
 Pads 4x4
 
+Leds:
+-16 x pads
+
 Potes:
--1xPaneo (slider)
--1xVolumen gral. (slider)
--10xLineales
+-1 x Paneo (lineal-slider)
+-1 x Volumen gral. (lineal-slider)
+-10 x 3/4 de vuelta lineales 
 
 Botones: 
--4xPag(arriba/abajo/izq/der)
--Alternar potes
--4xMute
+-4 x Pag(arriba/abajo/izq/der)
+-1 x Alternar potes
+-4 x Mute
 
