@@ -1,0 +1,12 @@
+Pads 4x4
+
+Potes:
+-1xPaneo (slider)
+-1xVolumen gral. (slider)
+-10xLineales
+
+Botones: 
+-4xPag(arriba/abajo/izq/der)
+-Alternar potes
+-4xMute
+
