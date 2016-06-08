@@ -18,13 +18,13 @@ void cargarMatriz(byte,byte,char);
 void Shift_init(void);
 
 //Global variables
-byte com_red=0b11110000;
-byte matriz[4][4]={
-  0,0,0,0,
-  0,0,0,0,
-  0,0,0,0,
-  0,0,0,0
-}
+int crgb = 0b1111000000000000;
+int matriz[4]={
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000
+};
 
 //Functions
 void setup(){
@@ -38,8 +38,7 @@ void loop(){
   if(Serial.available()==1){ //Si recibe UN dato
     recibido=Serial.read();
 
-    switch(recibido)
-    {
+    switch(recibido){
       case '0': cargarMatriz(0,0,'R');
       break;
       case '1': cargarMatriz(1,0,'R');
@@ -74,11 +73,10 @@ void loop(){
       break;
     }
   }
-  else
-  {
+  else{
     for(byte i=0;i<Serial.available();i++)Serial.read();//Limpia el buffer de entrada
   }
-  imprimirMatriz();
+  //imprimirMatriz();
 }
 
 void Shift_init(void){
