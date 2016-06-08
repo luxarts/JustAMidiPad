@@ -2,46 +2,46 @@
  *          Just A Midi Pad 
  * www.github.com/luxarts/JustAMidiPad
  * Module: Input
- * Version: 0.0 
+ * Version: 0.1 
  * 
  * Created by LuxARTS, OG-Jonii & pablonobile99
  *               2016
  */
+//dofinishions
+
+#define n0 0;//nota 0x0 //Numero que saca por puerto serie
+#define n1 1;//nota 0x1
+#define n2 2;//nota 0x2
+#define n3 3;//nota 0x3
+#define n4 4;//nota 1x0
+#define n5 5;//nota 1x1
+#define n6 6;//nota 1x2
+#define n7 7;//nota 1x3
+#define n8 8;//nota 2x0
+#define n9 9;//nota 2x1
+#define n10 10;//nota 2x2
+#define n11 11;//nota 2x3
+#define n12 12;//nota 3x0
+#define n13 13;//nota 3x1
+#define n14 14;//nota 3x2
+#define n15 15;//nota 3x3
+
 //Libraries
 
 //Prototypes
 
+int BitRead(int, int);
+void notaNF(byte , byte);
+
+
 //Global variables
 
-byte boton[2]=
-{
-  {0b11111111},//line 1 y 2 matriz 4x4
-  {0b11111111},//line 3 y 4 matriz 4x4
+int boton[2] = {64,64};//line 1 y 2 matriz 4x4 //inicialicacion en alta  //line 3 y 4 matriz 4x4
  // {0b11111111},//direccion(4) y mute(4)
  // {0b00000001}//camb.pag. potes
-};
 
+int j,i;
 byte mask;
-
-byte n0=0;//nota 0x0 
-byte n1=1;//nota 0x1
-byte n2=2;//nota 0x2
-byte n3=3;//nota 0x3
-byte n4=4;//nota 1x0
-byte n5=5;//nota 1x1
-byte n6=6;//nota 1x2
-byte n7=7;//nota 1x3
-byte n8=8;//nota 2x0
-byte n9=9;//nota 2x1
-byte n10=10;//nota 2x2
-byte n11=11;//nota 2x3
-byte n12=12;//nota 3x0
-byte n13=13;//nota 3x1
-byte n14=14;//nota 3x2
-byte n15=15;//nota 3x3
-
-//Functions
-
 
 void setup(){
   
@@ -50,84 +50,146 @@ void setup(){
 void loop(){
   //Guardado estado botones
   
-  for(i=1;i<3;i++){
-    for(j=0;0<8;i++){
-      mask==digitalRead(i)*64;//mando el estado del boton al bit 8
-      boton[i]=mask&boton[i];
-      boton[i]=boton[i]>>1;
-    }
+  for(i=0;i<16;i++){
+      if(i<8){
+        mask==digitalRead(i+2)*64;//mando el estado del boton al bit 8
+        boton[0]=mask&boton[0];//mando el estado del boton al bit 8
+        boton[0]=boton[0]>>1;//muevo el bit a un espacio de la der
+      }
+      if(i>=8){
+        mask==digitalRead(i+8)*64;//procedimiento anterior para el segundo byte de "boton[]"
+        boton[1]=mask&boton[1];
+        boton[1]=boton[1]>>1;
+      }
   }
   
   //Prende nota/boton guardad@
 
-  for(byte i=0;i<6;i++)//Comprueba pulsaciones
+  for(byte i=0;i<16;i++)//Comprueba pulsaciones
   {
-  if(boton[i]==0 && boton_b[i]==0)//Se apretó y no estaba apretado
+    if(i<8)j = BitRead(boton[0],i);//guarda el estado del bit "i" pin "i" en j del primer byte de "boton[]"
+    if(i>=8)j = BitRead(boton[1],i-8);//guarda el estado del bit "i" pin "i" en j del segundo byte de "boton[]"
+    if(j==0)//Se apretó
     {
-      switch(i)
+      switch(i)//envia (numero de boton) mas (1=prendido 0=apagado)
       {
-        case 0: notaOn(11);
+        case 0: notaNF(0,1);
         break;
-        case 1: notaOn(12);
+        case 1: notaNF(1,1);
         break;
-        case 2: notaOn(21);
+        case 2: notaNF(2,1);
         break;
-        case 3: notaOn(22);
+        case 3: notaNF(3,1);
         break;
-        case 4: notaOn(31);
+        case 4: notaNF(4,1);
         break;
-        case 5: notaOn(32);
+        case 5: notaNF(5,1);
+        break;
+        case 6: notaNF(6,1);
+        break;
+        case 7: notaNF(7,1);
+        break;
+        case 8: notaNF(8,1);
+        break;
+        case 9: notaNF(9,1);
+        break;
+        case 10: notaNF(10,1);
+        break;
+        case 11: notaNF(11,1);
+        break;
+        case 12: notaNF(12,1);
+        break;
+        case 13: notaNF(13,1);
+        break;
+        case 14: notaNF(14,1);
+        break;
+        case 15: notaNF(15,1);
         break;       
       }
-      boton_b[i]=1;//Se apretó
     }
+    if(j==1)//No se apreto
+    {  
+      switch(i)
+      {
+        case 0: notaNF(0,0);
+        break;
+        case 1: notaNF(1,0);
+        break;
+        case 2: notaNF(2,0);
+        break;
+        case 3: notaNF(3,0);
+        break;
+        case 4: notaNF(4,0);
+        break;
+        case 5: notaNF(5,0);
+        break;
+        case 6: notaNF(6,0);
+        break;
+        case 7: notaNF(7,0);
+        break;
+        case 8: notaNF(8,0);
+        break;
+        case 9: notaNF(9,0);
+        break;
+        case 10: notaNF(10,0);
+        break;
+        case 11: notaNF(11,0);
+        break;
+        case 12: notaNF(12,0);
+        break;
+        case 13: notaNF(13,0);
+        break;
+        case 14: notaNF(14,0);
+        break;
+        case 15: notaNF(15,0);
+        break;       
+      }
+    }      
   }
-  
-  //Apaga nota/boton guardad@
 }
 
 
 //F.declar.
 
-void notaOut(byte nota, byte NF)
+void notaNF(byte nota, byte NF)
 {
-  switch(nota)
+  switch(nota)//envia nota definida 
   {
-    case : nota=n0;
+    case 0: nota=n0;
     break;
-    case : nota=n1;
+    case 1: nota=n1;
     break;
-    case : nota=n2;
+    case 2: nota=n2;
     break;
-    case : nota=n3;
+    case 3: nota=n3;
     break;
-    case : nota=n4;
+    case 4: nota=n4;
     break;
-    case : nota=n5;
+    case 5: nota=n5;
     break;
-    case : nota=n6;
+    case 6: nota=n6;
     break;
-    case : nota=n7;
+    case 7: nota=n7;
     break;
-    case : nota=n8;
+    case 8: nota=n8;
     break;
-    case : nota=n9;
+    case 9: nota=n9;
     break;
-    case : nota=n10;
+    case 10: nota=n10;
     break;
-    case : nota=n11;
+    case 11: nota=n11;
     break;
-    case : nota=n12;
+    case 12: nota=n12;
     break;
-    case : nota=n13;
+    case 13: nota=n13;
     break;
-    case : nota=n14;
+    case 14: nota=n14;
     break;
-    case : nota=n15;
+    case 15: nota=n15;
     break;
   }
   
-  if(NF==1){
+  if(NF==1){//pregunta por ON o OFF
     Serial.write(0x90);//NotaON
   }
   else{
@@ -135,4 +197,9 @@ void notaOut(byte nota, byte NF)
   }
   Serial.write(nota);//Nota
   Serial.write(127);//Volumen 
+}
+
+ int BitRead(int n, int pos){//devuelve un bit de un byte
+  n=n>>pos;
+  return(n&1);
 }
