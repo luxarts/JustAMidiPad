@@ -18,12 +18,13 @@ void cargarMatriz(byte,byte,char);
 void Shift_init(void);
 
 //Global variables
-int crgb = 0b1111000000000000;
-int matriz[4]={
-  0b00000000,
-  0b00000000,
-  0b00000000,
-  0b00000000
+//Fil3-Fil0 / R3-R0 / G3-G0 / B3-B0
+int crgb = 0b1111000000000000;//16 bits = Shift register
+int matriz[4][4]={
+  {0,0,0,0},
+  {0,0,0,0},
+  {0,0,0,0},
+  {0,0,0,0}
 };
 
 //Functions
@@ -47,36 +48,36 @@ void loop(){
       break;
       case '3': cargarMatriz(3,0,'R');
       break;
-      case '4': cargarMatriz(0,1,'R');
+      case 'q': cargarMatriz(0,1,'R');
       break;
-      case '5': cargarMatriz(1,1,'R');
+      case 'w': cargarMatriz(1,1,'R');
       break;  
-      case '6': cargarMatriz(2,1,'R');
+      case 'e': cargarMatriz(2,1,'R');
       break;
-      case '7': cargarMatriz(3,1,'R');
+      case 'r': cargarMatriz(3,1,'R');
       break;
-      case '8': cargarMatriz(0,2,'R');
+      case 'a': cargarMatriz(0,2,'R');
       break;
-      case '9': cargarMatriz(1,2,'R');
+      case 's': cargarMatriz(1,2,'R');
       break;
-      case 10: cargarMatriz(2,2,'R');
+      case 'd': cargarMatriz(2,2,'R');
       break;
-      case 11: cargarMatriz(0,2,'R');
+      case 'f': cargarMatriz(0,2,'R');
       break;
-      case 12: cargarMatriz(1,3,'R');
+      case 'z': cargarMatriz(1,3,'R');
       break;
-      case 13: cargarMatriz(2,3,'R');
+      case 'x': cargarMatriz(2,3,'R');
       break;
-      case 14: cargarMatriz(2,3,'R');
+      case 'c': cargarMatriz(2,3,'R');
       break;
-      case 15: cargarMatriz(3,3,'R');
+      case 'v': cargarMatriz(3,3,'R');
       break;
     }
   }
   else{
     for(byte i=0;i<Serial.available();i++)Serial.read();//Limpia el buffer de entrada
   }
-  //imprimirMatriz();
+  imprimirMatriz();
 }
 
 void Shift_init(void){
@@ -102,6 +103,63 @@ void Shift_init(void){
 
 void cargarMatriz(byte filas,byte columnas,char color){
   
+  switch(color){
+    case 'R': color=1;
+    break;
+    case 'G': color=2;
+    break;
+    case 'B': color=3;
+    break;
+    case 0: color=0;
+    break;   
+  }
+  matriz[filas][columnas]=color;//Carga el espacio con el color, si es 0 apaga el led
+}
+
+void imprimirMatriz(void){
+  for(byte fil=0;fil<4;fil++){
+    switch(fil){
+      case 0; crgb=0b1110000000000000;
+      break;
+      case 1; crgb=0b1101000000000000;
+      break;
+      case 2; crgb=0b1011000000000000;
+      break;
+      case 3; crgb=0b0110000000000000;
+      break;
+    }
+    for(byte col=0;col<4;col++){
+      dato=matriz[fil][col];
+      switch(dato){
+        case 1: crgb=crgb|(0b0000100000000000>>col);
+        break;
+        case 2: crgb=crgb|(0b0000000010000000>>col);
+        break;
+        case 3: crgb=crgb|(0b0000000000001000>>col);
+        break;
+      }
+    }
+    
+  }
+}
+
+void cargarShift(void){
+  byte mask=1;
   
+  for(byte i=0;i<16;i++){
+    mask=1;
+    mask=(crgb>>i)&mask;
+    
+    digitalWrite(STCP,0);//Mantiene el registro    
+      
+    digitalWrite(SI,mask);//Escribe el bit
+    delayMicroseconds(1);
+    digitalWrite(SHCP,0);//Manda el pulso de shift
+    delayMicroseconds(1);
+    digitalWrite(SHCP,1);
+    delayMicroseconds(1);
+    
+    digitalWrite(STCP,1);//Saca el registro al puerto
+  }
 }
 
