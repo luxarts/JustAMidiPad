@@ -2,7 +2,7 @@
  *          Just A Midi Pad 
  * www.github.com/luxarts/JustAMidiPad
  * Module: Output
- * Version: 0.0
+ * Version: 0.7
  * 
  * Created by LuxARTS, OG-Jonii & pablonobile99
  *               2016
@@ -40,13 +40,13 @@ void loop(){
     recibido=Serial.read();
 
     switch(recibido){
-      case '0': cargarMatriz(0,0,'R');
+      case '1': cargarMatriz(0,0,'R');
       break;
-      case '1': cargarMatriz(1,0,'R');
+      case '2': cargarMatriz(1,0,'R');
       break;
-      case '2': cargarMatriz(2,0,'R');
+      case '3': cargarMatriz(2,0,'R');
       break;
-      case '3': cargarMatriz(3,0,'R');
+      case '4': cargarMatriz(3,0,'R');
       break;
       case 'q': cargarMatriz(0,1,'R');
       break;
@@ -62,11 +62,11 @@ void loop(){
       break;
       case 'd': cargarMatriz(2,2,'R');
       break;
-      case 'f': cargarMatriz(0,2,'R');
+      case 'f': cargarMatriz(3,2,'R');
       break;
-      case 'z': cargarMatriz(1,3,'R');
+      case 'z': cargarMatriz(0,3,'R');
       break;
-      case 'x': cargarMatriz(2,3,'R');
+      case 'x': cargarMatriz(1,3,'R');
       break;
       case 'c': cargarMatriz(2,3,'R');
       break;
@@ -101,7 +101,7 @@ void Shift_init(void){
   digitalWrite(STCP,1);//Carga el puerto
 }
 
-void cargarMatriz(byte filas,byte columnas,char color){
+void cargarMatriz(byte columnas,byte filas,char color){
   
   switch(color){
     case 'R': color=1;
@@ -117,15 +117,17 @@ void cargarMatriz(byte filas,byte columnas,char color){
 }
 
 void imprimirMatriz(void){
+  byte dato;
+  
   for(byte fil=0;fil<4;fil++){
     switch(fil){
-      case 0; crgb=0b1110000000000000;
+      case 0: crgb=0b1110000000000000;
       break;
-      case 1; crgb=0b1101000000000000;
+      case 1: crgb=0b1101000000000000;
       break;
-      case 2; crgb=0b1011000000000000;
+      case 2: crgb=0b1011000000000000;
       break;
-      case 3; crgb=0b0110000000000000;
+      case 3: crgb=0b0110000000000000;
       break;
     }
     for(byte col=0;col<4;col++){
@@ -144,15 +146,14 @@ void imprimirMatriz(void){
 }
 
 void cargarShift(void){
-  byte mask=1;
+  byte dato;
   
   for(byte i=0;i<16;i++){
-    mask=1;
-    mask=(crgb>>i)&mask;
+    dato=(crgb>>i)&1;
     
     digitalWrite(STCP,0);//Mantiene el registro    
       
-    digitalWrite(SI,mask);//Escribe el bit
+    digitalWrite(SI,dato);//Escribe el bit
     delayMicroseconds(1);
     digitalWrite(SHCP,0);//Manda el pulso de shift
     delayMicroseconds(1);
