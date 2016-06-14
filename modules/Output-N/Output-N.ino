@@ -33,85 +33,10 @@ void setup(){
   Serial.begin(9600);
   Shift_init(); //Inicializa el shift register 74F675APC
   pinMode(13,OUTPUT);
+
 }
 
 void loop(){
-  char recibido=0;
-  byte cantidad;
-  if(Serial.available()==1){ //Si recibe UN dato    
-    recibido=Serial.read();
-    switch(recibido){
-      //Prende
-      case '1': cargarMatriz(0,0,'B');
-      break;
-      case '2': cargarMatriz(0,1,'B');
-      break;
-      case '3': cargarMatriz(0,2,'B');
-      break;
-      case '4': cargarMatriz(0,3,'B');
-      break;
-      case 'q': cargarMatriz(1,0,'G');
-      break;
-      case 'w': cargarMatriz(1,1,'G');
-      break;  
-      case 'e': cargarMatriz(1,2,'G');
-      break;
-      case 'r': cargarMatriz(1,3,'G');
-      break;
-      case 'a': cargarMatriz(2,0,'G');
-      break;
-      case 's': cargarMatriz(2,1,'R');
-      break;
-      case 'd': cargarMatriz(2,2,'R');
-      break;
-      case 'f': cargarMatriz(2,3,'R');
-      break;
-      case 'z': cargarMatriz(3,0,'R');
-      break;
-      case 'x': cargarMatriz(3,1,'G');
-      break;
-      case 'c': cargarMatriz(3,2,'B');
-      break;
-      case 'v': cargarMatriz(3,3,'G');
-      break;
-      //Apaga
-      case '5': cargarMatriz(0,0,0);
-      break;
-      case '6': cargarMatriz(0,1,0);
-      break;
-      case '7': cargarMatriz(0,2,0);
-      break;
-      case '8': cargarMatriz(0,3,0);
-      break;
-      case 't': cargarMatriz(1,0,0);
-      break;
-      case 'y': cargarMatriz(1,1,0);
-      break;  
-      case 'u': cargarMatriz(1,2,0);
-      break;
-      case 'i': cargarMatriz(1,3,0);
-      break;
-      case 'g': cargarMatriz(2,0,0);
-      break;
-      case 'h': cargarMatriz(2,1,0);
-      break;
-      case 'j': cargarMatriz(2,2,0);
-      break;
-      case 'k': cargarMatriz(2,3,0);
-      break;
-      case 'b': cargarMatriz(3,0,0);
-      break;
-      case 'n': cargarMatriz(3,1,0);
-      break;
-      case 'm': cargarMatriz(3,2,0);
-      break;
-      case ',': cargarMatriz(3,3,0);
-      break;
-    }
-  }
-  else{
-    for(byte i=0;i<Serial.available();i++)Serial.read();//Limpia el buffer de entrada
-  }
   imprimirMatriz();
 }
 
@@ -174,10 +99,11 @@ void imprimirMatriz(void){
         break;
         case 3: crgb=crgb1|(0x0FFF&~(0b0000000000000001<<col));
         break;
+        case 0: crgb=crgb1|(0x0FFF);
       }
-      cargarShift();
-      //delay(1);    
-    }  
+      cargarShift();  
+      delay(1); 
+    }
   }
 }
 
@@ -186,7 +112,6 @@ void cargarShift(void){
   digitalWrite(STCP,0);//Mantiene el registro    
   for(byte i=0;i<16;i++){
     dato=(crgb>>i)&1;
-    //Serial.print(dato);
     digitalWrite(SI,dato);//Escribe el bit
     delayMicroseconds(1);
     digitalWrite(SHCP,0);//Manda el pulso de shift
@@ -195,5 +120,83 @@ void cargarShift(void){
     delayMicroseconds(1);
   }
   digitalWrite(STCP,1);//Saca el registro al puerto
+}
+
+void serialEvent(){
+  unsigned int cantidad;
+
+  while(Serial.available()){ //Si recibe UN dato    
+
+   byte estado=Serial.read(); //Nota ON 0x80+CH - Nota OFF 0x90+CH
+   char nota=Serial.read(); //Nota
+   byte velocity=Serial.read(); //Color: (0)=0 , (1;40)=R , (41;80)=G , (81;127)=B 
+    
+    switch(nota){
+      //Prende
+      case '1': cargarMatriz(0,0,'R');
+      break;
+      case '2': cargarMatriz(0,1,'R');
+      break;
+      case '3': cargarMatriz(0,2,'R');
+      break;
+      case '4': cargarMatriz(0,3,'R');
+      break;
+      case 'q': cargarMatriz(1,0,'G');
+      break;
+      case 'w': cargarMatriz(1,1,'G');
+      break;  
+      case 'e': cargarMatriz(1,2,'G');
+      break;
+      case 'r': cargarMatriz(1,3,'G');
+      break;
+      case 'a': cargarMatriz(2,0,'B');
+      break;
+      case 's': cargarMatriz(2,1,'B');
+      break;
+      case 'd': cargarMatriz(2,2,'B');
+      break;
+      case 'f': cargarMatriz(2,3,'B');
+      break;
+      case 'z': cargarMatriz(3,0,'R');
+      break;
+      case 'x': cargarMatriz(3,1,'G');
+      break;
+      case 'c': cargarMatriz(3,2,'B');
+      break;
+      case 'v': cargarMatriz(3,3,'G');
+      break;
+      //Apaga
+      case '5': cargarMatriz(0,0,0);
+      break;
+      case '6': cargarMatriz(0,1,0);
+      break;
+      case '7': cargarMatriz(0,2,0);
+      break;
+      case '8': cargarMatriz(0,3,0);
+      break;
+      case 't': cargarMatriz(1,0,0);
+      break;
+      case 'y': cargarMatriz(1,1,0);
+      break;  
+      case 'u': cargarMatriz(1,2,0);
+      break;
+      case 'i': cargarMatriz(1,3,0);
+      break;
+      case 'g': cargarMatriz(2,0,0);
+      break;
+      case 'h': cargarMatriz(2,1,0);
+      break;
+      case 'j': cargarMatriz(2,2,0);
+      break;
+      case 'k': cargarMatriz(2,3,0);
+      break;
+      case 'b': cargarMatriz(3,0,0);
+      break;
+      case 'n': cargarMatriz(3,1,0);
+      break;
+      case 'm': cargarMatriz(3,2,0);
+      break;
+    }
+  }
 }
 
