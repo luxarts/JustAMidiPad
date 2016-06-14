@@ -7,13 +7,18 @@
  * Created by LuxARTS, OG-Jonii & pablonobile99
  *               2016
  */
+ /* Conections
+ * Q0-Q3:   Fil3-Fil0
+ * Q4-Q7:   R3-R0
+ * Q8-Q11:  G3-G0
+ * Q12-Q15: B3-B0
+ */
 //Libraries
 #define STCP  2 //SR Pin 5: Store Clock Pulse
 #define SHCP  3 //SR Pin 2: !Shift Clock Pulse
 #define SI    4 //SR Pin 4: Serial Input
 
 //Prototypes
-
 void cargarMatriz(byte,byte,char);
 void Shift_init(void);
 
