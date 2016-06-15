@@ -12,3 +12,4 @@
 - [Custom Controller Page for FL Studio](https://freaksolid.wordpress.com/2013/05/09/creating-a-custom-launchpad-controller-page-for-fl-studio-11/)
 - [Custom Layout for FL Studio](http://forum.image-line.com/viewtopic.php?f=1914&t=92193)
 - [Use Launchpad in FL Studio](http://forum.image-line.com/viewtopic.php?f=1914&t=87521)
+- [Lights for Launchpad in Ableton](https://www.youtube.com/watch?v=W7PHDTRhUQk)
