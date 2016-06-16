@@ -7,19 +7,14 @@
  * Created by LuxARTS, OG-Jonii & pablonobile99
  *               2016
  */
- /* Conections
- * Q0-Q3:   Fil3-Fil0
- * Q4-Q7:   R3-R0
- * Q8-Q11:  G3-G0
- * Q12-Q15: B3-B0
- */
 //Libraries
 #define STCP  2 //SR Pin 5: Store Clock Pulse
 #define SHCP  3 //SR Pin 2: !Shift Clock Pulse
 #define SI    4 //SR Pin 4: Serial Input
 
 //Prototypes
-void cargarMatriz(byte,byte,char);
+
+void cargarMatriz(byte,byte,byte);
 void Shift_init(void);
 
 //Global variables
@@ -35,10 +30,8 @@ byte matriz[4][4]={
 
 //Functions
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   Shift_init(); //Inicializa el shift register 74F675APC
-  pinMode(13,OUTPUT);
-
 }
 
 void loop(){
@@ -66,19 +59,12 @@ void Shift_init(void){
   digitalWrite(STCP,1);//Carga el puerto
 }
 
-void cargarMatriz(byte filas,byte columnas,char color){
-  
-  switch(color){
-    case 'R': color=1;  //Rojo
-    break;
-    case 'G': color=2;  //Verde
-    break;
-    case 'B': color=3;  //Azul
-    break;
-    case 0: color=0;  //Apagado
-    break;   
-  }
-  matriz[filas][columnas]=color;//Carga el espacio con el color, si es 0 apaga el led
+void cargarMatriz(byte filas,byte columnas,byte color){
+  //Color: (0)=OFF=0 , (1;40)=R=1 , (41;80)=G=2 , (81;127)=B=3 
+  if(color>0 && color<=40)color=1;  //Rojo
+  if(color>40 && color<=80)color=2; //Verde
+  if(color>80 && color<=127)color=3;//Azul  
+  matriz[filas][columnas]=color;//Carga el espacio con el color
 }
 
 void imprimirMatriz(void){
@@ -132,76 +118,47 @@ void serialEvent(){
 
   while(Serial.available()){ //Si recibe UN dato    
 
-   byte estado=Serial.read(); //Nota ON 0x80+CH - Nota OFF 0x90+CH
-   char nota=Serial.read(); //Nota
-   byte velocity=Serial.read(); //Color: (0)=0 , (1;40)=R , (41;80)=G , (81;127)=B 
-    
-    switch(nota){
-      //Prende
-      case '1': cargarMatriz(0,0,'R');
-      break;
-      case '2': cargarMatriz(0,1,'R');
-      break;
-      case '3': cargarMatriz(0,2,'R');
-      break;
-      case '4': cargarMatriz(0,3,'R');
-      break;
-      case 'q': cargarMatriz(1,0,'G');
-      break;
-      case 'w': cargarMatriz(1,1,'G');
-      break;  
-      case 'e': cargarMatriz(1,2,'G');
-      break;
-      case 'r': cargarMatriz(1,3,'G');
-      break;
-      case 'a': cargarMatriz(2,0,'B');
-      break;
-      case 's': cargarMatriz(2,1,'B');
-      break;
-      case 'd': cargarMatriz(2,2,'B');
-      break;
-      case 'f': cargarMatriz(2,3,'B');
-      break;
-      case 'z': cargarMatriz(3,0,'R');
-      break;
-      case 'x': cargarMatriz(3,1,'G');
-      break;
-      case 'c': cargarMatriz(3,2,'B');
-      break;
-      case 'v': cargarMatriz(3,3,'G');
-      break;
-      //Apaga
-      case '5': cargarMatriz(0,0,0);
-      break;
-      case '6': cargarMatriz(0,1,0);
-      break;
-      case '7': cargarMatriz(0,2,0);
-      break;
-      case '8': cargarMatriz(0,3,0);
-      break;
-      case 't': cargarMatriz(1,0,0);
-      break;
-      case 'y': cargarMatriz(1,1,0);
-      break;  
-      case 'u': cargarMatriz(1,2,0);
-      break;
-      case 'i': cargarMatriz(1,3,0);
-      break;
-      case 'g': cargarMatriz(2,0,0);
-      break;
-      case 'h': cargarMatriz(2,1,0);
-      break;
-      case 'j': cargarMatriz(2,2,0);
-      break;
-      case 'k': cargarMatriz(2,3,0);
-      break;
-      case 'b': cargarMatriz(3,0,0);
-      break;
-      case 'n': cargarMatriz(3,1,0);
-      break;
-      case 'm': cargarMatriz(3,2,0);
-      break;
-    }
+    byte estado=Serial.read(); //Nota ON 0x90+CH - Nota OFF 0x80+CH
+    byte nota=Serial.read(); //Nota
+    byte velocity=Serial.read(); //Color: (0)=0 , (1;40)=R , (41;80)=G , (81;127)=B 
+
+    if(estado==0x90 || estado==0x80){//Si es Nota ON prende un led según la velocidad y solo deja pasar el canal 0 (0x90+CH0)
+      if(estado==0x80)velocity=0; //Si es Nota OFF apaga el led
+      switch(nota){
+        case 0x00: cargarMatriz(0,0,velocity);//Fila 0
+        break;
+        case 0x01: cargarMatriz(0,1,velocity);
+        break;
+        case 0x02: cargarMatriz(0,2,velocity);
+        break;
+        case 0x03: cargarMatriz(0,3,velocity);
+        break;
+        case 0x10: cargarMatriz(1,0,velocity);//Fila 1
+        break;
+        case 0x011: cargarMatriz(1,1,velocity);
+        break;  
+        case 0x012: cargarMatriz(1,2,velocity);
+        break;
+        case 0x013: cargarMatriz(1,3,velocity);
+        break;
+        case 0x20: cargarMatriz(2,0,velocity);//Fila 2
+        break;
+        case 0x21: cargarMatriz(2,1,velocity);
+        break;
+        case 0x22: cargarMatriz(2,2,velocity);
+        break;
+        case 0x23: cargarMatriz(2,3,velocity);
+        break;
+        case 0x30: cargarMatriz(3,0,velocity);//Fila 3
+        break;
+        case 0x31: cargarMatriz(3,1,velocity);
+        break;
+        case 0x32: cargarMatriz(3,2,velocity);
+        break;
+        case 0x33: cargarMatriz(3,3,velocity);
+        break;
+      }
+    }    
   }
 }
 
