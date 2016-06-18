@@ -10,4 +10,4 @@ Botones:
 -4 x Pag(arriba/abajo/izq/der)
 -1 x Alternar potes
 -4 x Mute
--16 Arcade cuadrados traslúcidos
+-16 x Arcade cuadrados traslúcidos
