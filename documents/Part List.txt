@@ -1,7 +1,5 @@
-Pads 4x4
-
 Leds:
--16 x pads
+-16 x Pads
 
 Potes:
 -1 x Paneo (lineal-slider)
@@ -12,4 +10,4 @@ Botones:
 -4 x Pag(arriba/abajo/izq/der)
 -1 x Alternar potes
 -4 x Mute
-
+-16 Arcade cuadrados traslúcidos
