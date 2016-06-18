@@ -13,3 +13,4 @@
 - [Custom Layout for FL Studio](http://forum.image-line.com/viewtopic.php?f=1914&t=92193)
 - [Use Launchpad in FL Studio](http://forum.image-line.com/viewtopic.php?f=1914&t=87521)
 - [Lights for Launchpad in Ableton](https://www.youtube.com/watch?v=W7PHDTRhUQk)
+- [Use Launchpad in Ableton](https://www.youtube.com/watch?v=uIo4Wp4-HWI)
