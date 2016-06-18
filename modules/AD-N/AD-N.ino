@@ -2,7 +2,7 @@
  *          Just A Midi Pad 
  * www.github.com/luxarts/JustAMidiPad
  * Module: AD
- * Version: 1.0
+ * Version: 1.2
  * 
  * Created by LuxARTS, OG-Jonii & pablonobile99
  *               2016
@@ -34,12 +34,17 @@ void loop(){
 
     if(pote[i]>pote_anterior[i]+2 || pote[i]<pote_anterior[i]-2)//Comparo 1er lectura con 2da lectura
     {
+        Serial.write(0xB0);//Control Change
+        Serial.write(i);//Número de control, en 2do micro se reemplaza la i por i+6 debido a que son 12 potes
+        Serial.write(mapeo);//Valor de pote
+        /*
         Serial.print("POTE");
         Serial.print(i+1);
         Serial.print("= ");
         Serial.print(mapeo);//Imprimo el mapeo hecho en la 2da lectura de los pines Analogicos
         Serial.println();
         pote_anterior[i]=pote[i];//Igualo para luego comparar con el sig
+        */
     }
   }
 }
