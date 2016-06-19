@@ -14,3 +14,5 @@
 - [Use Launchpad in FL Studio](http://forum.image-line.com/viewtopic.php?f=1914&t=87521)
 - [Lights for Launchpad in Ableton](https://www.youtube.com/watch?v=W7PHDTRhUQk)
 - [Use Launchpad in Ableton](https://www.youtube.com/watch?v=uIo4Wp4-HWI)
+- [Framework Remote Script for Ableton](https://github.com/gluon/AbletonLive9_RemoteScripts/tree/master/_Framework)
+- [Ableton Forum: Remote Script usage](https://forum.ableton.com/viewtopic.php?f=1&t=204146)
